@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Based Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="signupForm">
+        <h2>Sign Up</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <label for="operation">Choose Operation:</label>
+        <select id="operation">
+            <option value="addition">Addition</option>
+            <option value="subtraction">Subtraction</option>
+            <option value="multiplication">Multiplication</option>
+        </select>
+        <button onclick="signUp()">Sign Up</button>
+        <p id="signupMessage"></p>
+    </div>
+
+    <div class="container hidden" id="loginForm">
+        <h2>Login</h2>
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div class="container hidden" id="calculator">
+        <h2>Calculator</h2>
+        <p>Welcome, <span id="displayUsername"></span>!</p>
+        <p id="chosenOperation"></p>
+        <input type="number" id="num1" placeholder="Enter first number">
+        <input type="number" id="num2" placeholder="Enter second number">
+        <p id="result"></p>
+        <button onclick="calculate()">Calculate</button>
+    </div>
+
+    <script>
+        let users = {};
+
+        function signUp() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const operation = document.getElementById('operation').value;
+
+            if (username && password && operation) {
+                users[username] = { password: password, operation: operation };
+                document.getElementById('signupMessage').innerText = `User '${username}' registered successfully! Please log in.`;
+                document.getElementById('signupForm').classList.add('hidden');
+                document.getElementById('loginForm').classList.remove('hidden');
+            } else {
+                alert("Please fill out all fields.");
+            }
+        }
+
+        function login() {
+            const loginUsername = document.getElementById('loginUsername').value;
+            const loginPassword = document.getElementById('loginPassword').value;
+
+            if (users[loginUsername] && users[loginUsername].password === loginPassword) {
+                alert("Login successful!");
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('calculator').classList.remove('hidden');
+                document.getElementById('displayUsername').innerText = loginUsername;
+                document.getElementById('chosenOperation').innerText = `Operation: ${users[loginUsername].operation}`;
+                document.getElementById('calculator').dataset.operation = users[loginUsername].operation;
+            } else {
+                alert("Invalid username or password.");
+            }
+        }
+
+        function calculate() {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const operation = document.getElementById('calculator').dataset.operation;
+            let result;
+
+            if (!isNaN(num1) && !isNaN(num2)) {
+                switch (operation) {
+                    case 'addition':
+                        result = num1 + num2;
+                        break;
+                    case 'subtraction':
+                        result = num1 - num2;
+                        break;
+                    case 'multiplication':
+                        result = num1 * num2;
+                        break;
+                    default:
+                        result = "Unknown operation";
+                }
+                document.getElementById('result').innerText = `Result: ${result}`;
+            } else {
+                document.getElementById('result').innerText = "Please enter valid numbers.";
+            }
+        }
+    </script>
+</body>
+</html>
